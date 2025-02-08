@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+<html data-theme="night">
+
+{% block title %}FeliPOS{% endblock %}
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-screen text-center px-4">
+    <!-- Título con efecto Shimmer -->
+    <h1 class="text-9xl font-extrabold tracking-wide shimmer-text mb-12">FeliPOS</h1>
+    <p class="text-3xl text-gray-200 mb-8">Menos estrés, más ventas 😌 </p>
+
+    {% if user.is_authenticated %}
+        <button><a href="{% url 'menu' %}"  class="btn btn-lg bg-blue-400 text-xl text-white hover:bg-blue-600">Ir al menu</a></button>
+        {% else %}
+        <button><a href="{% url 'login' %}"  class="btn btn-lg bg-blue-400 text-xl text-white hover:bg-blue-600">Iniciar sesión</a></button>
+        {% endif %}
+
+</div>
+
+<!-- Estilos de Shimmer Wave -->
+<style>
+    .shimmer-text {
+        background: linear-gradient(90deg, #0D74CE, #5EB1EF, #0D74CE);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 2s infinite linear;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+</style>
+
+</html>
+{% endblock %}

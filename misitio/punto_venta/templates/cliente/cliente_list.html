@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% load static tailwind_tags %}  
+{% tailwind_css %}
+
+{% block content %}
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="pb-4 bg-white dark:bg-gray-900">
+        <label for="table-search" class="sr-only">Search</label>
+        <div class="flex justify-between items-center">
+            <div class="relative mt-1">
+                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <!-- Formulario de búsqueda -->
+                <form method="get" action="{% url 'clientes_list' %}" autocomplete="off">
+                    <input type="text" name="search" value="{{ search_query }}" id="table-search" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar clientes">
+                </form>
+            </div>
+
+            <!-- Botón de Crear Cliente alineado a la derecha -->
+            <div>
+                <a href="{% url 'cliente_create' %}" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300">Crear Cliente</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor con flexbox para mantener la tabla y la paginación fijos -->
+    <div class="flex flex-col min-h-[400px]">
+        <div class="flex-1 overflow-x-auto">
+            <table class="min-w-full table-auto border-collapse text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th class="px-6 py-3">RUT</th>
+                        <th class="px-6 py-3">Nombre</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in page_obj %}
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4">{{ cliente.rut }}</td>
+                            <td class="px-6 py-4">{{ cliente.nombre }}</td>
+                            <td class="px-6 py-4">{{ cliente.email }}</td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="{% url 'cliente_detail' cliente.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ver</a>
+                                <form action="{% url 'cliente_delete' cliente.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación fijada al fondo -->
+        <div class="mt-4 flex justify-center items-center py-4 bg-white dark:bg-gray-900">
+            <div class="flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1&search={{ search_query }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600">
+                        Primera
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600">
+                        Anterior
+                    </a>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <a href="#" class="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-100 border border-gray-300 hover:bg-blue-200 dark:text-white dark:bg-blue-600 dark:border-gray-600">
+                            {{ i }}
+                        </a>
+                    {% else %}
+                        <a href="?page={{ i }}&search={{ search_query }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600">
+                            {{ i }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600">
+                        Siguiente
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600">
+                        Última
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

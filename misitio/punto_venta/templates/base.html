@@ -1,0 +1,60 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Sitio{% endblock %}</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-900 text-white flex flex-col min-h-screen">
+
+    <!-- Header -->
+<header class="bg-gray-800 py-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center px-6">
+        <!-- Título con Pipe junto a FeliPOS -->
+        <div class="flex items-center space-x-3">
+            <a href="/" class="text-2xl font-bold text-blue-400 hover:text-blue-500 transition duration-300">FeliPOS</a>
+            {% if user.is_authenticated %}
+            <span class="text-xl font-semibold text-gray-300">|</span>
+                <p class="text-white">{{ user.username }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Navegación -->
+        <nav>
+            <ul class="flex space-x-6">
+                <li><a href="/" class="hover:text-blue-400 transition duration-300">Inicio</a></li>
+
+                {% if user.is_authenticated %}
+                    <li><a href="/menu/" class="hover:text-blue-400 transition duration-300">Menú</a></li>
+                    <li><a href="/about/" class="hover:text-blue-400 transition duration-300">Acerca de</a></li>
+                    <li><a href="/contact/" class="hover:text-blue-400 transition duration-300">Contacto</a></li>
+                    <li><a href="{% url 'logout' %}" class="hover:text-blue-400 transition duration-300">Cerrar sesión</a></li>
+                {% else %}
+                    <li><a href="/about/" class="hover:text-blue-400 transition duration-300">Acerca de</a></li>
+                    <li><a href="/contact/" class="hover:text-blue-400 transition duration-300">Contacto</a></li>
+                    <li><a href="{% url 'login' %}" class="hover:text-blue-400 transition duration-300">Iniciar sesión</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto py-6 px-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-6 mt-12">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 FeliPOS. Todos los derechos reservados.</p>
+            <p><a href="/privacy/" class="text-blue-400 hover:underline">Política de privacidad</a> | <a href="/terms/" class="text-blue-400 hover:underline">Términos y condiciones</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>

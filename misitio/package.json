@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "daisyui": "^4.12.23"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "motion": "^12.4.0",
+    "tailwind-merge": "^3.0.1"
+  }
+}

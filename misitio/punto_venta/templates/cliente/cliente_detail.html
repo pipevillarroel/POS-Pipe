@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load static tailwind_tags %}
+{% tailwind_css %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-screen text-center px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-1">
+        <div class="card bg-neutral text-neutral-content w-full md:w-96">
+            <div class="card-body items-center text-center">
+                <h1 class="text-3xl font-semibold mb-4">{{ cliente.nombre }}</h1>
+                <p><strong>RUT:</strong> {{ cliente.rut }}</p>
+                <p><strong>Email:</strong> {{ cliente.email }}</p>
+                <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ cliente.direccion }}</p>
+
+                {% if confirm_delete %}
+                    <!-- Confirmar eliminación -->
+                    <form action="{% url 'cliente_delete' cliente.id %}" method="POST">
+                        {% csrf_token %}
+                        <p class="text-lg mb-4">¿Estás seguro de que deseas eliminar este cliente?</p>
+                        <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300">Eliminar</button>
+                        <a href="{% url 'clientes_list' %}" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-300 ml-4">Cancelar</a>
+                    </form>
+                {% else %}
+                    <!-- Opción de eliminar solo en cliente_detail -->
+                    <div class="mt-4 text-right">
+                        <a href="{% url 'cliente_delete' cliente.id %}" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300">Eliminar</a>
+                    </div>
+                {% endif %}
+
+                <!-- Botón para editar los datos del cliente -->
+                <div class="mt-4 text-right">
+                    <a href="{% url 'cliente_edit' cliente.pk %}" class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-300">Editar</a>
+                </div>
+                
+                <div class="mt-6 text-right">
+                    <a href="{% url 'clientes_list' %}" class="px-6 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-all duration-300">Volver al Listado</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
